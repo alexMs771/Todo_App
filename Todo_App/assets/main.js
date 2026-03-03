@@ -58,8 +58,8 @@ $(document).ready(function(){
             url: 'index.cfm?action=main.updateCheckboxes',
             type: 'POST',
             data: {
-                id: checkedItems.join(','),
-                isDone: checkedItems.length > 0 ? 1 : 0
+                id: checkedItems,
+                isDone: 1
             },
             success: function(res){
                 if(res.status == "success"){

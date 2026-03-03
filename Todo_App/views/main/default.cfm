@@ -23,6 +23,10 @@
         .bigContainer:focus-within{
             border: 1px ridge rgb(170, 93, 93);
         }
+        .item:checked + p{
+            text-decoration: line-through;
+            color: #999;
+        }
     </style>
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
@@ -37,7 +41,7 @@
         <div class="text-center text-danger head">todos</div><br>
             <div class="shadow text-center w-75 mx-auto bg-white bigContainer">
                 <div class="d-flex align-items-flex-start gap-2 p-3 w-100 text-decoration-none font-italic form-control-lg" autofocus>
-                    <button class="btn" type="button" id=""><svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="34px" fill="black"><path d="M480-344 240-584l56-56 184 184 184-184 56 56-240 240Z"/></svg></button>
+                    <button class="btn" type="button" id="checkAll"><svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="34px" fill="black"><path d="M480-344 240-584l56-56 184 184 184-184 56 56-240 240Z"/></svg></button>
                     <input type="text" name="paraText" id="paraText" class="newone" placeholder="What needs to be done?" autofocus><br>
                 </div>
             </div>
@@ -47,8 +51,8 @@
                     <cfoutput query="todosList">
                         <li class="list-group-item d-flex justify-content-between align-items-center">
                             <div class="d-flex align-items-center gap-4">
-                                <input class="form-check-input rounded-circle border border-secondary item" type="checkbox" name="id" id="id" value="#todosList.id#" style="transform: scale(1.5);height: 1em;" <cfif isDone>checked</cfif>>
-                                <cfif isDone>
+                                <input class="form-check-input rounded-circle border border-secondary item" type="checkbox" name="id" id="id" value="#todosList.id#" style="transform: scale(1.5);height: 1em;" <cfif isDone EQ 1>checked</cfif>>
+                                <cfif isDone EQ 1>
                                     <p class="h4 fw-normal text-decoration-line-through text-muted">#todosList.todo_text#</p>
                                 <cfelse>
                                     <p class="h4 fw-normal">#todosList.todo_text#</p>
@@ -58,11 +62,9 @@
                         </li>
                     </cfoutput>
                 <div class="d-flex justify-content-between align-items-center p-3 gap-2">
-                    <span><cfoutput><cfif todosList.recordCount eq 1 AND todosList.isDone eq 0>
-                        1 item left
-                    <cfelseif todosList.recordCount gt 1 AND todosList.isDone eq 0>
+                    <span><cfoutput>
                         #todosList.recordCount# items left
-                    </cfif></cfoutput></span>
+                    </cfoutput></span>
                     <button class="btn btn-sm btn-outline-danger checkAll" id="checkAll">All</button>
                     <button class="btn btn-sm btn-outline-danger" id="activeBtn">Active</button>
                     <button class="btn btn-sm btn-outline-danger" id="completedBtn">Completed</button>

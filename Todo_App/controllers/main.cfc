@@ -18,5 +18,6 @@ component accessors="true" output="false"{
     remote void function updateCheckboxes(struct rc) {
         var successStruct = variables.UserService.updateCheckboxes(rc.id, rc.isDone);
         variables.fw.renderData("json", successStruct);
+        abort;
     }
 }
