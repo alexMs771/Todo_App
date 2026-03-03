@@ -22,13 +22,22 @@
         </cfquery>
         <cfreturn { "status": "success" }>
     </cffunction>
-    <cffunction name="updateCheckboxes" access="remote" returntype="any" returnFormat="json">
+    <cffunction name="updateCheck" access="remote" returntype="any" returnFormat="json">
         <cfargument name="id" required="true">
-        <cfquery datasource="CFtasks" name="qUpdateTodo">
+        <cfquery datasource="CFtasks">
             UPDATE todoList
             SET isDone = 1
             WHERE id = <cfqueryparam value="#arguments.id#" cfsqltype="cf_sql_integer">
         </cfquery>
-        <cfreturn { "status": "success" }>
+        <cfreturn {"status" : "success"}>
     </cffunction>
+    <!---cffunction name="updateAlready" access="remote" returntype="any" returnFormat="json">
+        <cfargument name="id" required="true">
+        <cfquery datasource="CFtasks">
+            UPDATE todoList
+            SET isDone = 0
+            WHERE id = <cfqueryparam value="#arguments.id#" cfsqltype="cf_sql_integer">
+        </cfquery>
+        <cfreturn {"status" : "success"}>
+    </cffunction--->
 </cfcomponent>

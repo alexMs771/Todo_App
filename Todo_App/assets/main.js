@@ -43,29 +43,22 @@ $(document).ready(function(){
             }
         });
     });
-    $('#checkAll').click(function(){
-        $('.item').prop('checked', this.checked);
-        updateServer();
-    });
     $('.item').click(function(){
-        updateServer();
-    });
+         updateServer();
+        });
     function updateServer() {
-        var checkedItems = $('.item:checked').map(function(){
-            return $(this).val();
-        }).get();
+        var checkedItems = $('.item:checked').val()
         $.ajax({
             url: 'index.cfm?action=main.updateCheckboxes',
             type: 'POST',
             data: {
-                id: checkedItems,
-                isDone: 1
+                id: checkedItems
             },
             success: function(res){
                 if(res.status == "success"){
-                    window.location.href = "index.cfm?action=main.default";
                     $("#msg").text("Todo item updated successfully.");
                 } else {
+                    $(".item").prop('checked',false)
                     $("#msg").text("Failed to update todo item.");
                 }
             }

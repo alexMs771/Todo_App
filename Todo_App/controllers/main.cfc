@@ -15,9 +15,12 @@ component accessors="true" output="false"{
         var successStruct = variables.UserService.eachDelete(rc.id);
         variables.fw.renderData("json", successStruct);
     }
-    remote void function updateCheckboxes(struct rc) {
-        var successStruct = variables.UserService.updateCheckboxes(rc.id, rc.isDone);
-        variables.fw.renderData("json", successStruct);
-        abort;
+    remote void function updateCheckboxes(struct rc){
+        var successStruct = variables.UserService.updateCheck(rc.id);
+        variables.fw.renderdata("json", successStruct);
     }
+   /* remote void function updatealreadychecked(struct rc){
+        var successStruct = variables.UserService.updateAlready(rc.id);
+        variables.fw.renderdata("json", successStruct);
+    }*/
 }

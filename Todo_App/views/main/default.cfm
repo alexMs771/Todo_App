@@ -51,12 +51,8 @@
                     <cfoutput query="todosList">
                         <li class="list-group-item d-flex justify-content-between align-items-center">
                             <div class="d-flex align-items-center gap-4">
-                                <input class="form-check-input rounded-circle border border-secondary item" type="checkbox" name="id" id="id" value="#todosList.id#" style="transform: scale(1.5);height: 1em;" <cfif isDone EQ 1>checked</cfif>>
-                                <cfif isDone EQ 1>
-                                    <p class="h4 fw-normal text-decoration-line-through text-muted">#todosList.todo_text#</p>
-                                <cfelse>
-                                    <p class="h4 fw-normal">#todosList.todo_text#</p>
-                                </cfif>
+                                <input class="form-check-input rounded-circle item" type="checkbox" name="id" value="#todosList.id#" style="height:2rem;width:1.5rem;"<cfif isDone EQ 1>checked</cfif>>
+                                <p class="h4 fw-normal text-muted">#todosList.todo_text#</p>
                             </div>
                             <button class="btn" id="deleteBtn" value="#todosList.id#"><svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="20px"><path d="m256-200-56-56 224-224-224-224 56-56 224 224 224-224 56 56-224 224 224 224-56 56-224-224-224 224Z"/></svg></button>
                         </li>
