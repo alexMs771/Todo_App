@@ -1,26 +1,33 @@
-component accessors="true" output="false"{
+component accessors="true" output="false" {
+
     property name="UserService" inject="model.UserService";
-    remote function init(fw) {
-        variables.fw = fw;
-        return this;
+
+    function default(rc) {
+        rc.todos = UserService.getTodos();
     }
-    remote void function default(struct rc) {
-        rc.todosList = variables.UserService.getTodos();
+
+    function save(rc) {
+        var result = UserService.saveTodo(rc.todo_text);
+        variables.fw.renderData("json", result);
     }
-    remote void function save(struct rc) {
-        var successStruct = variables.UserService.saveTodo(rc.todo_text);
-        variables.fw.renderData("json", successStruct);
+
+    function delete(rc) {
+        var result = UserService.deleteTodo(rc.id);
+        variables.fw.renderData("json", result);
     }
-    remote void function delete(struct rc) {
-        var successStruct = variables.UserService.eachDelete(rc.id);
-        variables.fw.renderData("json", successStruct);
+
+    function toggle(rc) {
+        var result = UserService.toggleTodo(rc.id, rc.isDone);
+        variables.fw.renderData("json", result);
     }
-    remote void function updateCheckboxes(struct rc){
-        var successStruct = variables.UserService.updateCheck(rc.id);
-        variables.fw.renderdata("json", successStruct);
+
+    function filter(rc) {
+        var result = UserService.getFiltered(rc.type);
+        variables.fw.renderData("json", result);
     }
-   /* remote void function updatealreadychecked(struct rc){
-        var successStruct = variables.UserService.updateAlready(rc.id);
-        variables.fw.renderdata("json", successStruct);
-    }*/
+
+    function clearCompleted(rc) {
+        var result = UserService.clearCompleted();
+        variables.fw.renderData("json", result);
+    }
 }
