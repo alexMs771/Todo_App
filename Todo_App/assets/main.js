@@ -2,8 +2,11 @@ $(document).ready(function () {
 
     loadTodos("all");
 
+
     $("#paraText").on("keydown", function (e) {
-        if (e.key === "Enter" || e.keyCode === 13) {
+
+        if (e.key === "Enter") {
+
             e.preventDefault();
 
             var txt = $("#paraText").val().trim();
@@ -13,30 +16,21 @@ $(document).ready(function () {
                 url: "index.cfm?action=main.save",
                 type: "POST",
                 dataType: "json",
-                data: {
-                    todo_text: txt
-                },
+                data: { todo_text: txt },
+
                 success: function (res) {
 
-                    if (res.status === "success") {
+                    $("#paraText").val("");
+                    loadTodos("all");
 
-                        var newItem = `
-                        <li class="list-group-item d-flex justify-content-between align-items-center">
-                            <div>
-                                <input type="checkbox" class="item me-2" data-id="${res.id}">
-                                <span>${txt}</span>
-                            </div>
-                            <button class="deleteBtn btn btn-sm" data-id="${res.id}">✕</button>
-                        </li>`;
-
-                        $("#todosContainer").prepend(newItem);
-                        $("#paraText").val("");
-                        updateItemsLeft();
-                    }
                 }
             });
+
         }
+
     });
+
+
 
     $(document).on("click", ".deleteBtn", function () {
 
@@ -46,17 +40,18 @@ $(document).ready(function () {
             url: "index.cfm?action=main.delete",
             type: "POST",
             dataType: "json",
-            data: {
-                id: id
-            },
-            success: function (res) {
-                if (res.status === "success") {
-                    $('button[data-id="' + id + '"]').closest("li").remove();
-                    updateItemsLeft();
-                }
+            data: { id: id },
+
+            success: function () {
+
+                loadTodos("all");
+
             }
         });
+
     });
+
+
 
     $(document).on("change", ".item", function () {
 
@@ -67,24 +62,38 @@ $(document).ready(function () {
             url: "index.cfm?action=main.toggle",
             type: "POST",
             dataType: "json",
-            data: {
-                id: id,
-                isDone: done
+            data: { id: id, isDone: done },
+
+            success: function () {
+
+                loadTodos("all");
+
             }
         });
 
-        if (done == 1) {
-            $(this).siblings("span").addClass("text-decoration-line-through text-muted");
-        } else {
-            $(this).siblings("span").removeClass("text-decoration-line-through text-muted");
-        }
-
-        updateItemsLeft();
     });
 
-    $("#allBtn").click(function () { loadTodos("all"); });
-    $("#activeBtn").click(function () { loadTodos("active"); });
-    $("#completedBtn").click(function () { loadTodos("completed"); });
+
+
+    $("#allBtn").click(function () {
+
+        loadTodos("all");
+
+    });
+
+    $("#activeBtn").click(function () {
+
+        loadTodos("active");
+
+    });
+
+    $("#completedBtn").click(function () {
+
+        loadTodos("completed");
+
+    });
+
+
 
     $("#clearCompletedBtn").click(function () {
 
@@ -92,12 +101,18 @@ $(document).ready(function () {
             url: "index.cfm?action=main.clearCompleted",
             type: "POST",
             dataType: "json",
+
             success: function () {
+
                 loadTodos("all");
+
             }
         });
 
     });
+
+
+
 
     function loadTodos(type) {
 
@@ -105,44 +120,52 @@ $(document).ready(function () {
             url: "index.cfm?action=main.filter",
             type: "GET",
             dataType: "json",
-            data: {
-                type: type
-            },
+            data: { type: type },
+
             success: function (data) {
+
                 renderTodos(data);
+
             }
         });
 
     }
+
+
+
 
     function renderTodos(data) {
 
         var html = "";
         var left = 0;
 
-        $.each(data, function (i, t) {
+        if (data.DATA) {
 
-            if (t.ISDONE == 0) left++;
+            $.each(data.DATA, function (i, row) {
 
-            html += `
-            <li class="list-group-item d-flex justify-content-between align-items-center">
-                <div>
-                    <input type="checkbox" class="item me-2" data-id="${t.ID}" ${t.ISDONE == 1 ? "checked" : ""}>
-                    <span class="${t.ISDONE == 1 ? "text-decoration-line-through text-muted" : ""}">
-                        ${t.TODO_TEXT}
-                    </span>
-                </div>
-                <button class="deleteBtn btn btn-sm" data-id="${t.ID}">✕</button>
-            </li>`;
-        });
+                var id = row[0];
+                var text = row[1];
+                var done = row[2];
 
-        $("#todosContainer").html(html);
-        $("#itemsLeft").text(left + " items left");
-    }
+                if (done == 0) left++;
 
-    function updateItemsLeft() {
+                html += `
+                <li class="list-group-item d-flex justify-content-between align-items-center">
+                    <div>
+                        <input type="checkbox" class="item me-2" data-id="${id}" ${done == 1 ? "checked" : ""}>
+                        <span class="${done == 1 ? "text-decoration-line-through text-muted" : ""}">
+                            ${text}
+                        </span>
+                    </div>
+                    <button class="deleteBtn btn btn-sm" data-id="${id}">✕</button>
+                </li>`;
 
-        var left = $(".item:not(:checked)").length;
+            });
+
+        }
+
+        $("#todoList").html(html);
+
         $("#itemsLeft").text(left + " items left");
 
     }
