@@ -1,33 +1,51 @@
-component accessors="true" output="false" {
+component {
 
-    property name="UserService" inject="model.UserService";
+    property name="todoService";
 
-    function default(rc) {
-        rc.todos = UserService.getTodos();
+    function default(rc){
+
+        rc.todos = todoService.getTodos();
+
     }
 
-    function save(rc) {
-        var result = UserService.saveTodo(rc.todo_text);
-        variables.fw.renderData("json", result);
+    function save(rc){
+
+        var res = todoService.saveTodo(rc.todo_text);
+
+        return serializeJSON(res);
+
     }
 
-    function delete(rc) {
-        var result = UserService.deleteTodo(rc.id);
-        variables.fw.renderData("json", result);
+    function delete(rc){
+
+        var res = todoService.deleteTodo(rc.id);
+
+        return serializeJSON(res);
+
     }
 
-    function toggle(rc) {
-        var result = UserService.toggleTodo(rc.id, rc.isDone);
-        variables.fw.renderData("json", result);
+    function toggle(rc){
+
+        var res = todoService.toggleTodo(rc.id,rc.isDone);
+
+        return serializeJSON(res);
+
     }
 
-    function filter(rc) {
-        var result = UserService.getFiltered(rc.type);
-        variables.fw.renderData("json", result);
+    function filter(rc){
+
+        var q = todoService.getFiltered(rc.type);
+
+        return serializeJSON(q);
+
     }
 
-    function clearCompleted(rc) {
-        var result = UserService.clearCompleted();
-        variables.fw.renderData("json", result);
+    function clear(rc){
+
+        var res = todoService.clearCompleted();
+
+        return serializeJSON(res);
+
     }
+
 }
